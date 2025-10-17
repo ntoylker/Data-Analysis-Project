@@ -115,3 +115,62 @@ The analysis investigated the correlation between the time before TMS (`preTMS`)
 * **Test Reliability**:
     * For **Setups 2 and 4**, which have larger sample sizes (>30), the **parametric test** is considered more reliable.
     * For **Setups 1, 3, 5, and 6**, which have smaller sample sizes, the **randomization test** is the more trustworthy method.
+
+---
+
+### 5. Simple & Polynomial Regression (EDduration vs. Setup)
+
+The analysis explored the relationship between `EDduration` and the experimental `Setup`.
+
+* **Linear Model**: A simple linear regression model was initially fitted for both the "with TMS" and "without TMS" datasets.
+    * The model fit the **"with TMS" data better** than the "without TMS" data, as indicated by a higher R² value.
+    * However, in both cases, the R² values were quite low, suggesting that a simple linear model is **not sufficient** to capture the relationship between `EDduration` and `Setup`.
+
+* **Polynomial Model**: To improve the fit, a 4th-degree polynomial regression model was applied.
+    * This extension proved to be very useful. The polynomial model achieved a **significantly better fit** for both datasets, with the adjusted R² values being much closer to 1. This indicates that the relationship between `EDduration` and `Setup` is non-linear.
+
+---
+
+### 6. Multiple Linear Regression & Feature Selection
+
+This task aimed to find the best predictive model for `EDduration` when TMS is applied, using several experimental parameters as predictors. Three types of models were compared: a full multiple linear regression model, a model derived from **Stepwise Regression**, and one from the **LASSO** method. The analysis was performed twice: once including the `Spike` variable and once without it.
+
+* **Analysis With the `Spike` Variable**:
+    * When including all predictors, the **LASSO model performed the best**. It achieved the lowest Mean Squared Error (MSE) and the highest adjusted R², indicating a superior fit to the data compared to the full and stepwise models.
+
+* **Analysis Without the `Spike` Variable**:
+    * The `Spike` variable contains many missing values. The analysis was repeated after removing it entirely.
+    * **This approach yielded better results**. Although the MSE increased slightly (due to using a larger dataset, as fewer rows were discarded), the **adjusted R² value improved for all three models**.
+    * This indicates that the `Spike` variable does not contribute positively to the model's predictive power and that **ignoring it leads to a better overall model fit**.
+
+---
+
+### 7. Model Validation on Training and Test Sets
+
+To evaluate the real-world predictive power of the models from question 6, the dataset was split into a 75% training set and a 25% test set. The `Spike` variable was excluded from this analysis based on previous findings.
+
+* **Scenario 1: Using Pre-selected Variables**
+    * The models were trained on the new training set but kept the same variables that were originally selected using the *full* dataset.
+    * When evaluated on the test set, the **Stepwise model demonstrated the best predictive performance**, achieving the lowest Mean Squared Error (MSE).
+
+* **Scenario 2: Retraining the Models**
+    * The Stepwise and LASSO models were retrained from scratch on the training set, allowing them to perform feature selection on this smaller dataset.
+    * Once again, the **Stepwise model performed best on the test set**, showing the lowest MSE.
+
+The results did not change significantly between the two scenarios. This suggests that the variables selected by the Stepwise model are robust and generalize well, even when trained on a smaller subset of the data.
+
+---
+
+### 8. Advanced Regression Models with `preTMS` and `postTMS`
+
+The analysis was extended by adding `preTMS` and `postTMS` as potential predictors and comparing the performance of the full linear model, Stepwise, LASSO, and Principal Component Regression (PCR).
+
+* **Adding `preTMS` as a Predictor**
+    * The inclusion of `preTMS` improved the fit (adjusted R²) for both the LASSO and Stepwise models compared to the models in question 6.
+    * The **Stepwise model delivered the best performance** of the four.
+    * The PCR model, configured to explain 99% of the variance, performed better than LASSO and the full linear model but was not as effective as the Stepwise model.
+
+* **Adding `postTMS` as a Predictor**
+    * When `postTMS` was also included, the performance of **all models improved dramatically**, with adjusted R² values approaching 1.
+    * This result is expected, as `EDduration` is by definition the sum of `preTMS` and `postTMS` when TMS is applied. The models effectively learned this linear relationship (`EDduration ≈ preTMS + postTMS`).
+    * This confirms that `postTMS` is the single most important predictor for `EDduration`, and all models—including the dimensionality reduction techniques—successfully adapted to prioritize this variable, leading to a near-perfect fit.
