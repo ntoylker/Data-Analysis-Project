@@ -11,6 +11,12 @@ This project investigates the effectiveness of **Transcranial Magnetic Stimulati
 The analysis is performed on a dataset collected at the Laboratory of Transcranial Magnetic Stimulation, 3rd Neurology Clinic of AUTH, which combines EEG and TMS measurements from epileptic patients.
 
 ---
+## 👥 Authors
+
+* **Dimitris Aximiotis**: @Aximiotis
+* **Nikos Toulkeridis**: @ntoylker
+
+---
 
 ## 📊 The Dataset
 
